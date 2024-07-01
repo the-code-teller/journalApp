@@ -16,7 +16,6 @@ public class JournalEntry {
     @Id
     private ObjectId id;
 
-    @Indexed(unique = true)
     private  String title;
 
     private String content;

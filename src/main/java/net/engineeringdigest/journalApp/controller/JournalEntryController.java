@@ -23,6 +23,7 @@ public class JournalEntryController {
     @Autowired
     private UserService userService;
 
+    @CrossOrigin
     @GetMapping("/{username}")
     public ResponseEntity<?> getALlJournalEntriesByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
@@ -32,6 +33,7 @@ public class JournalEntryController {
         return new ResponseEntity<>(journalEntries, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping("/{username}")
     public ResponseEntity<?> addEntryByUsername(@RequestBody JournalEntry journalEntry, @PathVariable String username) {
         try {
@@ -43,6 +45,7 @@ public class JournalEntryController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getJournalEntryById(@PathVariable ObjectId id) {
         Optional<JournalEntry> journalEntry = journalEntryService.getEntryById(id);
@@ -52,6 +55,7 @@ public class JournalEntryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin
     @DeleteMapping("{username}/{id}")
     public ResponseEntity<?> deleteJournalEntryByUsernameAndId(@PathVariable ObjectId id, @PathVariable String username) {
         try {
@@ -62,6 +66,7 @@ public class JournalEntryController {
         }
     }
 
+    @CrossOrigin
     @PutMapping("id/{id}")
     public ResponseEntity<?> updateJournalEntryById(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntryUpdates) {
         JournalEntry journalEntry = journalEntryService.getEntryById(id).orElse(null);
