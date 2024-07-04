@@ -24,9 +24,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User saveUser(User user) {
+    public User saveNewUser(User user) {
         user.setPassword(passwordencoder.encode(user.getPassword()));
         user.setRoles(Arrays.asList("USER"));
+        return userRepository.save(user);
+    }
+
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 

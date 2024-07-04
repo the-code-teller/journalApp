@@ -5,7 +5,6 @@ import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,10 +42,15 @@ public class JournalEntryService {
         return journalEntryRepository.findById(id);
     }
 
-    public void deleteById(ObjectId id, String username) {
+    @Transactional
+    public boolean deleteById(ObjectId id, String username) {
         User user = userService.findByUsername(username);
-//        user.getJournalEntries().removeIf(x -> x.getId().equals(id));
-        userService.saveUser(user);
-        journalEntryRepository.deleteById(id);
+        boolean removed = user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+        if(removed) {
+            userService.saveUser(user);
+            journalEntryRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

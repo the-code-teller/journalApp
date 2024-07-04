@@ -26,7 +26,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         userInDb.setUsername(user.getUsername());
         userInDb.setPassword(user.getPassword());
-        User savedUser = userService.saveUser(userInDb);
+        User savedUser = userService.saveNewUser(userInDb);
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
 
