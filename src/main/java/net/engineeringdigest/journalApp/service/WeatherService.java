@@ -3,6 +3,7 @@ package net.engineeringdigest.journalApp.service;
 import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.entity.Weather;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,7 +11,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class WeatherService {
     private final String url = "http://api.weatherapi.com/v1/current.json?key=API_KEY&q=COUNTRY&aqi=no";
-    private final String API_KEY = "cf3346330a5d4f65a3e201046241607";
+
+    @Value("${weather.api.key}")
+    private String API_KEY;
 //    private String country = "LONDON";
 
     @Autowired
