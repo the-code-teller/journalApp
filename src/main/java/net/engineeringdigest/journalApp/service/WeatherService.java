@@ -1,10 +1,9 @@
 package net.engineeringdigest.journalApp.service;
 
+import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.entity.Weather;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +18,15 @@ public class WeatherService {
 
     public Weather callWeatherAPI(String country) {
         String finalUrl = url.replace("API_KEY", API_KEY).replace("COUNTRY", country);
+        User user = User.builder().username("r").password("r").build();
+
+        // For POST call
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("key", "value");
+        HttpEntity<User> userHttpEntity = new HttpEntity<>(user, httpHeaders);
+//        ResponseEntity<Weather> response = restTemplate.exchange(finalUrl, HttpMethod.POST, userHttpEntity, Weather.class);
+
+//        For GET calls
         ResponseEntity<Weather> response = restTemplate.exchange(finalUrl, HttpMethod.GET, null, Weather.class);
         HttpStatus statusCode = response.getStatusCode();
         Weather responseBody = response.getBody();

@@ -54,6 +54,7 @@ public class PublicController {
     @GetMapping("weather")
     public ResponseEntity<?> weather() {
         Weather.Current weather = weatherService.callWeatherAPI("LONDON").getCurrent();
+                
         return new ResponseEntity<>(weather, HttpStatus.OK);
     }
 }
