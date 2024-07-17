@@ -2,9 +2,9 @@ package net.engineeringdigest.journalApp.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.engineeringdigest.journalApp.entity.User;
+import net.engineeringdigest.journalApp.entity.Weather;
 import net.engineeringdigest.journalApp.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.engineeringdigest.journalApp.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,9 @@ public class PublicController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private WeatherService weatherService;
 
     @GetMapping("health-check")
     public String healthCheck() {
@@ -45,5 +48,12 @@ public class PublicController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("weather")
+    public ResponseEntity<?> weather() {
+        Weather.Current weather = weatherService.callWeatherAPI("LONDON").getCurrent();
+        return new ResponseEntity<>(weather, HttpStatus.OK);
     }
 }
