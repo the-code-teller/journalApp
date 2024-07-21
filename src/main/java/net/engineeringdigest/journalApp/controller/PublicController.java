@@ -57,8 +57,7 @@ public class PublicController {
     @CrossOrigin
     @GetMapping("weather")
     public ResponseEntity<?> weather() {
-        Weather.Current weather = weatherService.callWeatherAPI("LONDON").getCurrent();
-
+        Weather.Current weather = weatherService.callWeatherAPI("NEW YORK").getCurrent();
         return new ResponseEntity<>(weather, HttpStatus.OK);
     }
 

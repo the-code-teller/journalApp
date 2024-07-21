@@ -1,5 +1,7 @@
 package net.engineeringdigest.journalApp.service;
 
+import net.engineeringdigest.journalApp.cache.AppCache;
+import net.engineeringdigest.journalApp.constant.Placeholder;
 import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.entity.Weather;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WeatherService {
-    private final String url = "http://api.weatherapi.com/v1/current.json?key=API_KEY&q=COUNTRY&aqi=no";
+//    private final String url = "http://api.weatherapi.com/v1/current.json?key=API_KEY&q=CITY&aqi=no";
 
     @Value("${weather.api.key}")
     private String API_KEY;
@@ -19,8 +21,15 @@ public class WeatherService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Weather callWeatherAPI(String country) {
-        String finalUrl = url.replace("API_KEY", API_KEY).replace("COUNTRY", country);
+    @Autowired
+    private AppCache appCache;
+
+//    private final String url = appCache.APP_CACHE.get("weather_api");
+
+    public Weather callWeatherAPI(String city) {
+//        String finalUrl = url.replace("<apiKey>", API_KEY).replace("<city>", city);
+//        String finalUrl = appCache.APP_CACHE.get(AppCache.keys.WEATHER_API.toString()).replace("<apiKey>", API_KEY).replace("<city>", city);
+        String finalUrl = appCache.appCache.get(AppCache.keys.WEATHER_API.toString()).replace(Placeholder.API_KEY, API_KEY).replace(Placeholder.CITY, city);
         User user = User.builder().username("r").password("r").build();
 
         // For POST call
