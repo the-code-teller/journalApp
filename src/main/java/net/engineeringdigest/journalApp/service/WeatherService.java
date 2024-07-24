@@ -24,24 +24,36 @@ public class WeatherService {
     @Autowired
     private AppCache appCache;
 
+    @Autowired
+    private RedisService redisService;
+
 //    private final String url = appCache.APP_CACHE.get("weather_api");
 
     public Weather callWeatherAPI(String city) {
 //        String finalUrl = url.replace("<apiKey>", API_KEY).replace("<city>", city);
 //        String finalUrl = appCache.APP_CACHE.get(AppCache.keys.WEATHER_API.toString()).replace("<apiKey>", API_KEY).replace("<city>", city);
         String finalUrl = appCache.appCache.get(AppCache.keys.WEATHER_API.toString()).replace(Placeholder.API_KEY, API_KEY).replace(Placeholder.CITY, city);
-        User user = User.builder().username("r").password("r").build();
+//        User user = User.builder().username("r").password("r").build();
 
         // For POST call
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("key", "value");
-        HttpEntity<User> userHttpEntity = new HttpEntity<>(user, httpHeaders);
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("key", "value");
+//        HttpEntity<User> userHttpEntity = new HttpEntity<>(user, httpHeaders);
 //        ResponseEntity<Weather> response = restTemplate.exchange(finalUrl, HttpMethod.POST, userHttpEntity, Weather.class);
 
 //        For GET calls
+
+        Weather weather = redisService.get("weather_of" + city, Weather.class);
+        if (weather != null) {
+            return weather;
+        }
+
         ResponseEntity<Weather> response = restTemplate.exchange(finalUrl, HttpMethod.GET, null, Weather.class);
         HttpStatus statusCode = response.getStatusCode();
         Weather responseBody = response.getBody();
+        if (responseBody != null) {
+            redisService.set("weather_of" + city, responseBody, 300l);  // saving weather response for 5 minutes
+        }
         return responseBody;
     }
 }

@@ -34,6 +34,18 @@ public class PublicController {
     }
 
     @CrossOrigin
+    @PostMapping("signup")
+    public void signup() {
+
+    }
+
+    @CrossOrigin
+    @PostMapping
+    public void login() {
+
+    }
+
+    @CrossOrigin
     @PostMapping("create-user")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         User savedUser = null;
@@ -57,7 +69,7 @@ public class PublicController {
     @CrossOrigin
     @GetMapping("weather")
     public ResponseEntity<?> weather() {
-        Weather.Current weather = weatherService.callWeatherAPI("NEW YORK").getCurrent();
+        Weather.Current weather = weatherService.callWeatherAPI("LONDON").getCurrent();
         return new ResponseEntity<>(weather, HttpStatus.OK);
     }
 
