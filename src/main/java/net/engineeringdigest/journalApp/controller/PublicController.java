@@ -4,11 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.entity.Weather;
 import net.engineeringdigest.journalApp.service.TextToSpeechService;
+import net.engineeringdigest.journalApp.service.UserDetailsServiceImpl;
 import net.engineeringdigest.journalApp.service.UserService;
 import net.engineeringdigest.journalApp.service.WeatherService;
+import net.engineeringdigest.journalApp.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -26,6 +31,15 @@ public class PublicController {
     @Autowired
     private TextToSpeechService textToSpeechService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @GetMapping("health-check")
     public String healthCheck() {
         log.info("Health OK");
@@ -40,9 +54,12 @@ public class PublicController {
     }
 
     @CrossOrigin
-    @PostMapping
-    public void login() {
-
+    @PostMapping("login")
+    public ResponseEntity<String> login(@RequestBody User user) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        String token = jwtUtil.generateToken(userDetails.getUsername());
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @CrossOrigin
